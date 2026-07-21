@@ -7,7 +7,7 @@ export interface Question {
   text: string;
   type: ScaleType;
   required: boolean;
-  order: number;
+  order?: number;
   customScaleLabels?: {
     1: string;
     2: string;
@@ -19,7 +19,7 @@ export interface Question {
 
 export interface RespondentIdentity {
   name?: string;
-  gender: 'Laki-Laki' | 'Perempuan' | 'Lainnya' | '';
+  gender: 'Laki-Laki' | 'Perempuan' | 'Lainnya' | string;
   age: string;
   education: string;
   occupation: string;
@@ -45,6 +45,7 @@ export interface JournalMetadata {
   pdfPathId: string;
   pdfPathEn: string;
   status: 'active' | 'closed';
+  isOpen?: boolean;
   deadline: string;
   keywords: string[];
 }
