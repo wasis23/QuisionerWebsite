@@ -11,6 +11,7 @@ export const initialJournalMetadata: JournalMetadata = {
   pdfPathId: '/Indonesia.pdf',
   pdfPathEn: '/English.pdf',
   status: 'active',
+  isOpen: true,
   deadline: '2026-12-31',
   keywords: ['Rekam Medis Elektronik', 'Otonomi Pasien', 'Post-Mortem Privacy', 'Teknologi Blockchain', 'Perlindungan Data Kesehatan'],
 };
@@ -491,7 +492,7 @@ export const initialQuestions: Question[] = [
     section: 'review',
     text: 'Apa kelebihan utama dari artikel jurnal ini?',
     type: 'text',
-    required: false,
+    required: true,
     order: 32,
   },
   {
@@ -499,7 +500,7 @@ export const initialQuestions: Question[] = [
     section: 'review',
     text: 'Apa kekurangan atau hal yang perlu diperbaiki dari artikel ini?',
     type: 'text',
-    required: false,
+    required: true,
     order: 33,
   },
   {
@@ -507,7 +508,7 @@ export const initialQuestions: Question[] = [
     section: 'review',
     text: 'Saran dan rekomendasi untuk pengembangan penelitian selanjutnya?',
     type: 'text',
-    required: false,
+    required: true,
     order: 34,
   },
   {

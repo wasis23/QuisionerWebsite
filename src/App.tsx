@@ -130,6 +130,7 @@ export function App() {
             {/* Sisi Kanan: Form Kuesioner Area (5 Columns on Large screen) */}
             <div className="lg:col-span-5 h-full min-h-[600px] lg:h-[calc(100vh-100px)]">
               <QuestionnaireForm
+                journal={journal}
                 questions={questions}
                 currentLanguage={currentLanguage}
                 onSubmit={handleFormSubmit}
