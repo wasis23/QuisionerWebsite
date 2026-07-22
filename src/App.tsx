@@ -42,8 +42,8 @@ export function App() {
   useEffect(() => {
     const fetchDb = async () => {
       try {
-        const apiUrl = import.meta.env.DEV ? 'http://localhost:3000' : '';
-        const res = await fetch(`${apiUrl}/api/db`, { cache: 'no-store' });
+        const apiPath = import.meta.env.DEV ? 'http://localhost:3000/api/db' : '/api.php';
+        const res = await fetch(apiPath, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data.journal && data.journal.length > 0) setJournal(data.journal[0]);
@@ -68,8 +68,8 @@ export function App() {
     
     const saveDb = async () => {
       try {
-        const apiUrl = import.meta.env.DEV ? 'http://localhost:3000' : '';
-        await fetch(`${apiUrl}/api/db`, {
+        const apiPath = import.meta.env.DEV ? 'http://localhost:3000/api/db' : '/api.php';
+        await fetch(apiPath, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
