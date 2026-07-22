@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-$dbFile = __DIR__ . '/db.json';
+$dbFile = __DIR__ . '/../db.json';
 
 // GET: Read data
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
