@@ -20,6 +20,7 @@ app.use(express.json({ limit: '10mb' }));
 app.get('/api/db', (req, res) => {
   try {
     const data = fs.readFileSync(dbPath, 'utf-8');
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.json(JSON.parse(data));
   } catch (error) {
     res.status(500).json({ error: 'Failed to read database' });
@@ -28,9 +29,13 @@ app.get('/api/db', (req, res) => {
 
 app.post('/api/db', (req, res) => {
   try {
-    fs.writeFileSync(dbPath, JSON.stringify(req.body, null, 2));
-    res.json({ success: true });
+    const data = req.body;
+    console.log(`[POST /api/db] Received data. Responses count: ${data.responses ? data.responses.length : 0}`);
+    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+    console.log(`[POST /api/db] Successfully wrote to ${dbPath}`);
+    res.json({ success: true, written: true });
   } catch (error) {
+    console.error(`[POST /api/db] Error:`, error);
     res.status(500).json({ error: 'Failed to write database' });
   }
 });

@@ -43,7 +43,7 @@ export function App() {
     const fetchDb = async () => {
       try {
         const apiUrl = import.meta.env.DEV ? 'http://localhost:3000' : '';
-        const res = await fetch(`${apiUrl}/api/db`);
+        const res = await fetch(`${apiUrl}/api/db`, { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
           if (data.journal && data.journal.length > 0) setJournal(data.journal[0]);
