@@ -39,7 +39,7 @@ app.post('/api/db', (req, res) => {
 app.use(express.static(path.join(__dirname, 'dist')));
 
 // Fallback to index.html for React Router (Single Page Application)
-app.get('*', (req, res) => {
+app.get(/.*/, (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
