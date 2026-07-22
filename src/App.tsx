@@ -42,7 +42,7 @@ export function App() {
   useEffect(() => {
     const fetchDb = async () => {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+        const apiUrl = import.meta.env.DEV ? 'http://localhost:3000' : '';
         const res = await fetch(`${apiUrl}/api/db`);
         if (res.ok) {
           const data = await res.json();
@@ -68,7 +68,7 @@ export function App() {
     
     const saveDb = async () => {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+        const apiUrl = import.meta.env.DEV ? 'http://localhost:3000' : '';
         await fetch(`${apiUrl}/api/db`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
