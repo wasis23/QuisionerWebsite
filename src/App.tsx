@@ -31,61 +31,61 @@ export function App() {
   // Active language choice for reading PDF ('id' | 'en')
   const [currentLanguage, setCurrentLanguage] = useState<'id' | 'en'>('id');
 
+  const [isInitializing, setIsInitializing] = useState(true);
+
   // Main data state
-  const [journal, setJournal] = useState<JournalMetadata>(() => {
-    try {
-      const saved = localStorage.getItem(APP_JOURNAL_KEY);
-      return saved ? JSON.parse(saved) : initialJournalMetadata;
-    } catch {
-      return initialJournalMetadata;
-    }
-  });
+  const [journal, setJournal] = useState<JournalMetadata>(initialJournalMetadata);
+  const [questions, setQuestions] = useState<Question[]>(initialQuestions);
+  const [responses, setResponses] = useState<ResponseItem[]>(initialResponses);
 
-  const [questions, setQuestions] = useState<Question[]>(() => {
-    try {
-      const saved = localStorage.getItem(APP_QUESTIONS_KEY);
-      return saved ? JSON.parse(saved) : initialQuestions;
-    } catch {
-      return initialQuestions;
-    }
-  });
-
-  const [responses, setResponses] = useState<ResponseItem[]>(() => {
-    try {
-      const saved = localStorage.getItem(APP_RESPONSES_KEY);
-      return saved ? JSON.parse(saved) : initialResponses;
-    } catch {
-      return initialResponses;
-    }
-  });
+  // Load from Database
+  useEffect(() => {
+    const fetchDb = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+        const res = await fetch(`${apiUrl}/api/db`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.journal && data.journal.length > 0) setJournal(data.journal[0]);
+          if (data.questions) setQuestions(data.questions);
+          if (data.responses) setResponses(data.responses);
+        }
+      } catch (e) {
+        console.error('Failed fetching DB:', e);
+      } finally {
+        setIsInitializing(false);
+      }
+    };
+    fetchDb();
+  }, []);
 
   // Latest submitted response for success modal
   const [submittedResponse, setSubmittedResponse] = useState<ResponseItem | null>(null);
 
-  // Persist responses, questions, journal to localStorage
+  // Persist responses, questions, journal to Database API
   useEffect(() => {
-    try {
-      localStorage.setItem(APP_RESPONSES_KEY, JSON.stringify(responses));
-    } catch (e) {
-      console.error('Failed saving responses:', e);
-    }
-  }, [responses]);
+    if (isInitializing) return;
+    
+    const saveDb = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+        await fetch(`${apiUrl}/api/db`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            journal: [journal],
+            questions,
+            responses
+          })
+        });
+      } catch (e) {
+        console.error('Failed saving DB:', e);
+      }
+    };
 
-  useEffect(() => {
-    try {
-      localStorage.setItem(APP_QUESTIONS_KEY, JSON.stringify(questions));
-    } catch (e) {
-      console.error('Failed saving questions:', e);
-    }
-  }, [questions]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(APP_JOURNAL_KEY, JSON.stringify(journal));
-    } catch (e) {
-      console.error('Failed saving journal:', e);
-    }
-  }, [journal]);
+    const timeoutId = setTimeout(() => saveDb(), 500);
+    return () => clearTimeout(timeoutId);
+  }, [journal, questions, responses, isInitializing]);
 
   const handleFormSubmit = (response: ResponseItem) => {
     setResponses((prev) => [response, ...prev]);
