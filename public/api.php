@@ -8,9 +8,12 @@ header('Access-Control-Allow-Headers: Content-Type');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
-}
-
+// Coba cari di folder parent (jika api.php ada di dalam dist/)
 $dbFile = __DIR__ . '/../db.json';
+if (!file_exists($dbFile)) {
+    // Coba cari di folder yang sama (jika api.php dipindah ke root)
+    $dbFile = __DIR__ . '/db.json';
+}
 
 // GET: Read data
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
